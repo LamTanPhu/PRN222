@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PRN222_Group_Project.Models;
+using PRN222_Group_Project.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

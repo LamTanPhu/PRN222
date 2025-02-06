@@ -1,4 +1,4 @@
-﻿namespace PRN222_Group_Project.Models
+﻿namespace PRN222_Group_Project.Data
 {
     using Microsoft.EntityFrameworkCore;
 
