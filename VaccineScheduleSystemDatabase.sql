@@ -1,8 +1,7 @@
 USE master;
-DROP database IF EXISTS VaccineScheduleSystem;
-
-create database VaccineScheduleSystem;
-USE VaccineScheduleSystem
+DROP DATABASE IF EXISTS VaccineScheduleSystem;
+CREATE DATABASE VaccineScheduleSystem;
+USE VaccineScheduleSystem;
 
 CREATE TABLE Manufacturers (
   ManufacturerId INTEGER PRIMARY KEY,
@@ -18,39 +17,45 @@ CREATE TABLE VaccineCenters (
   Name VARCHAR(200),
   Location VARCHAR(200),
   ContactNumber INTEGER,
-  Email VARCHAR(200)
+  Email VARCHAR(200),
+  ActiveStatus VARCHAR(200)
 );
 
 CREATE TABLE VaccineBatches (
   VaccineBatchId INTEGER PRIMARY KEY,
-  ManufacturerId INTEGER FOREIGN KEY REFERENCES Manufacturers(ManufacturerId),
-  CenterId INTEGER FOREIGN KEY REFERENCES VaccineCenters(CenterId),
-  Quantity integer,
-  ActiveStatus varchar(200)
+  ManufacturerId INTEGER,
+  CenterId INTEGER,
+  Quantity INTEGER,
+  ActiveStatus VARCHAR(200),
+  FOREIGN KEY (ManufacturerId) REFERENCES Manufacturers(ManufacturerId) ON DELETE CASCADE,
+  FOREIGN KEY (CenterId) REFERENCES VaccineCenters(CenterId) ON DELETE CASCADE
 );
 
 CREATE TABLE VaccineCategories (
   VaccineCategoryId INTEGER PRIMARY KEY,
-  ParentCategoryId INTEGER FOREIGN KEY REFERENCES VaccineCategories(VaccineCategoryId),
-  CategoryName varchar(200),
-  Description varchar(200),
-  Status Varchar(200),
+  ParentCategoryId INTEGER,
+  CategoryName VARCHAR(200),
+  Description VARCHAR(200),
+  Status VARCHAR(200),
+  FOREIGN KEY (ParentCategoryId) REFERENCES VaccineCategories(VaccineCategoryId) ON DELETE CASCADE
 );
 
 CREATE TABLE Vaccines (
   VaccineId INTEGER PRIMARY KEY,
-  CategoryId INTEGER FOREIGN KEY REFERENCES VaccineCategories(VaccineCategoryId), 
-  BatchId INTEGER FOREIGN KEY REFERENCES VaccineBatches(VaccineBatchId), 
+  CategoryId INTEGER,
+  BatchId INTEGER,
   Name VARCHAR(200),
   QuantityAvailable INTEGER,
   UnitOfVolume INTEGER,
   IngredientsDescription VARCHAR(200),
-  MinAge Integer,
-  MaxAge Integer,
+  MinAge INTEGER,
+  MaxAge INTEGER,
   BetweenPeriod DATE,
   Price INTEGER,
   ProductionDate DATE,
-  ExpirationDate DATE
+  ExpirationDate DATE,
+  FOREIGN KEY (CategoryId) REFERENCES VaccineCategories(VaccineCategoryId) ON DELETE CASCADE,
+  FOREIGN KEY (BatchId) REFERENCES VaccineBatches(VaccineBatchId) ON DELETE CASCADE
 );
 
 CREATE TABLE VaccinePackages (
@@ -62,9 +67,11 @@ CREATE TABLE VaccinePackages (
 
 CREATE TABLE VaccinePackageDetails (
   Id INTEGER PRIMARY KEY,
-  VaccineId INTEGER FOREIGN KEY REFERENCES Vaccines(VaccineId),
-  VaccinePackageId INTEGER FOREIGN KEY REFERENCES VaccinePackages(VaccinePackageId),
-  PackagePrice Integer,
+  VaccineId INTEGER,
+  VaccinePackageId INTEGER,
+  PackagePrice INTEGER,
+  FOREIGN KEY (VaccineId) REFERENCES Vaccines(VaccineId) ON DELETE CASCADE,
+  FOREIGN KEY (VaccinePackageId) REFERENCES VaccinePackages(VaccinePackageId) ON DELETE CASCADE
 );
 
 CREATE TABLE Feedback (
@@ -75,7 +82,7 @@ CREATE TABLE Feedback (
 
 CREATE TABLE Accounts (
   AccountId INTEGER PRIMARY KEY,
-  CenterId INTEGER FOREIGN KEY REFERENCES VaccineCenters(CenterId),
+  CenterId INTEGER,
   UserName VARCHAR(200),
   Password VARCHAR(200),
   PhoneNumber INTEGER,
@@ -83,84 +90,104 @@ CREATE TABLE Accounts (
   AccountRole VARCHAR(200),
   ProfileImage VARCHAR(200),
   Salary INTEGER,
-  Status VARCHAR(200)
+  Status VARCHAR(200),
+  FOREIGN KEY (CenterId) REFERENCES VaccineCenters(CenterId) ON DELETE CASCADE
 );
+
 CREATE TABLE ChildrenProfiles (
   ProfileId INTEGER PRIMARY KEY,
-  AccountId INTEGER FOREIGN KEY REFERENCES Accounts(AccountId),
-  ParentName Varchar(200),
+  AccountId INTEGER,
+  ParentName VARCHAR(200),
   Name VARCHAR(200),
   Gender VARCHAR(1),
   DateOfBirth DATE,
-  Allergies VARCHAR(200)
+  Allergies VARCHAR(200),
+  FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId) ON DELETE CASCADE
 );
 
 CREATE TABLE Orders (
   OrderId INTEGER PRIMARY KEY,
-  FeedbackId INTEGER FOREIGN KEY REFERENCES Feedback(FeedbackId),
-  ProfileId INTEGER FOREIGN KEY REFERENCES ChildrenProfiles(ProfileId),
+  FeedbackId INTEGER,
+  ProfileId INTEGER,
   PurchaseDate DATE,
-  Status INTEGER
+  TotalAmount INTEGER,
+  TotalOrderPrice INTEGER,
+  Status INTEGER,
+  FOREIGN KEY (FeedbackId) REFERENCES Feedback(FeedbackId) ON DELETE CASCADE,
+  FOREIGN KEY (ProfileId) REFERENCES ChildrenProfiles(ProfileId) ON DELETE CASCADE
 );
 
 CREATE TABLE Payment (
   PaymentId INTEGER PRIMARY KEY,
-  OrderId INTEGER FOREIGN KEY REFERENCES Orders(OrderId),
+  OrderId INTEGER,
   PaymentName VARCHAR(200),
   PaymentMethod VARCHAR(200),
   PaymentDate INTEGER,
   PaymentStatus INTEGER,
-  PayAmount INTEGER
+  PayAmount INTEGER,
+  FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE
 );
 
 CREATE TABLE OrderVaccineDetails (
   OrderVaccineDetailsId INTEGER PRIMARY KEY,
-  OrderId INTEGER FOREIGN KEY REFERENCES Orders(OrderId),
-  VaccineId INTEGER FOREIGN KEY REFERENCES Vaccines(VaccineId),
+  OrderId INTEGER,
+  VaccineId INTEGER,
   Quantity INTEGER,
-  TotalPrice INTEGER
+  TotalPrice INTEGER,
+  FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE,
+  FOREIGN KEY (VaccineId) REFERENCES Vaccines(VaccineId) ON DELETE CASCADE
 );
 
 CREATE TABLE OrderPackageDetails (
   OrderPackageDetailsId INTEGER PRIMARY KEY,
-  OrderId INTEGER FOREIGN KEY REFERENCES Orders(OrderId),
-  VaccinePackageId INTEGER FOREIGN KEY REFERENCES VaccinePackages(VaccinePackageId),
+  OrderId INTEGER,
+  VaccinePackageId INTEGER,
   Quantity INTEGER,
-  TotalPrice INTEGER
+  TotalPrice INTEGER,
+  FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE,
+  FOREIGN KEY (VaccinePackageId) REFERENCES VaccinePackages(VaccinePackageId) ON DELETE CASCADE
 );
 
 CREATE TABLE VaccineHistory (
   HistoryId INTEGER PRIMARY KEY,
-  VaccineId INTEGER FOREIGN KEY REFERENCES Vaccines(VaccineId),
-  ProfileId INTEGER FOREIGN KEY REFERENCES ChildrenProfiles(ProfileId),
-  AccountId INTEGER FOREIGN KEY REFERENCES Accounts(AccountId),
-  CenterId INTEGER FOREIGN KEY REFERENCES VaccineCenters(CenterId),
+  VaccineId INTEGER,
+  ProfileId INTEGER,
+  AccountId INTEGER,
+  CenterId INTEGER,
   AdministeredDate DATE,
-  AdministeredBy Varchar(200),
+  AdministeredBy VARCHAR(200),
   DocumentationProvided VARCHAR(200),
   Notes VARCHAR(100),
-  VerifiedStatus INTEGER
+  VerifiedStatus INTEGER,
+  FOREIGN KEY (VaccineId) REFERENCES Vaccines(VaccineId) ON DELETE CASCADE,
+  FOREIGN KEY (ProfileId) REFERENCES ChildrenProfiles(ProfileId) ON DELETE CASCADE,
+  FOREIGN KEY (AccountId) REFERENCES Accounts(AccountId) ON DELETE CASCADE,
+  FOREIGN KEY (CenterId) REFERENCES VaccineCenters(CenterId) ON DELETE CASCADE
 );
 
 CREATE TABLE VaccinationSchedule (
   VaccinationScheduleId INTEGER PRIMARY KEY,
-  ProfileId INTEGER FOREIGN KEY REFERENCES ChildrenProfiles(ProfileId),
-  CenterId INTEGER FOREIGN KEY REFERENCES VaccineCenters(CenterId),
-  OrderVaccineDetailsId INTEGER FOREIGN KEY REFERENCES OrderVaccineDetails(OrderVaccineDetailsId),
-  OrderPackageDetailsId INTEGER FOREIGN KEY REFERENCES OrderPackageDetails(OrderPackageDetailsId),
-  DoseNumber Integer,
+  ProfileId INTEGER,
+  CenterId INTEGER,
+  OrderVaccineDetailsId INTEGER,
+  OrderPackageDetailsId INTEGER,
+  DoseNumber INTEGER,
   AppointmentDate DATE,
   ActualDate DATE,
   AdministeredBy VARCHAR(200),
-  Status INTEGER
+  Status INTEGER,
+  FOREIGN KEY (ProfileId) REFERENCES ChildrenProfiles(ProfileId) ON DELETE CASCADE,
+  FOREIGN KEY (CenterId) REFERENCES VaccineCenters(CenterId) ON DELETE CASCADE,
+  FOREIGN KEY (OrderVaccineDetailsId) REFERENCES OrderVaccineDetails(OrderVaccineDetailsId) ON DELETE CASCADE,
+  FOREIGN KEY (OrderPackageDetailsId) REFERENCES OrderPackageDetails(OrderPackageDetailsId) ON DELETE CASCADE
 );
 
 CREATE TABLE VaccineReactions (
   VaccineReactionId INTEGER PRIMARY KEY,
-  VaccineScheduleId INTEGER FOREIGN KEY REFERENCES VaccinationSchedule(VaccinationScheduleId),
+  VaccineScheduleId INTEGER,
   Reaction VARCHAR(200),
   Severity INTEGER,
   ReactionTime INTEGER,
-  ResolvedTime INTEGER
+  ResolvedTime INTEGER,
+  FOREIGN KEY (VaccineScheduleId) REFERENCES VaccinationSchedule(VaccinationScheduleId) ON DELETE CASCADE
 );
-
