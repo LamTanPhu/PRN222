@@ -39,8 +39,12 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost;Database=VaccineScheduleSystem;User Id=sa;Password=12345;TrustServerCertificate=True;");
+            if (!optionsBuilder.IsConfigured) // Only configure if not already configured
+            {
+                optionsBuilder.UseSqlServer("Server=(local);Database=VaccineScheduleSystem;User Id=sa;Password=1234567890;TrustServerCertificate=True;");
+            }
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

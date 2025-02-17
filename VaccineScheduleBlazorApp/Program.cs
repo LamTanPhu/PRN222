@@ -1,9 +1,14 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Context;
 using VaccineScheduleBlazorApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add DbContext service to the container before building the app
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add services to the container
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
