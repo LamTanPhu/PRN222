@@ -13,8 +13,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\SWD392\VaccineScheduleAPI\ModelViews\ModelViews.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\IRepository\IRepository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
