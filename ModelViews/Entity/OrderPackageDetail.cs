@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PRN222_Group_Project.Models.Entities
+namespace ModelViews.Entity
 {
     public class OrderPackageDetail
     {

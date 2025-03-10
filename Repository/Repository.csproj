@@ -12,11 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\SWD392\VaccineScheduleAPI\ModelViews\ModelViews.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\ModelViews\ModelViews.csproj" />
   </ItemGroup>
 
 </Project>
