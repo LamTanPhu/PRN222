@@ -1,17 +1,9 @@
 ﻿namespace Repository.Context
 {
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection.Emit;
-    using System.Reflection.PortableExecutable;
-    using System.Security.Principal;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
+    using ModelViews.Entity;
+
     //using IRepository.Entity;
-    using PRN222_Group_Project.Models.Entities;
 
     public class ApplicationDbContext : DbContext
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection.PortableExecutable;
 
-namespace PRN222_Group_Project.Models.Entities
+namespace ModelViews.Entity
 {
     public class VaccinePackageDetail
     {
