@@ -6,7 +6,7 @@ namespace ModelViews.Entity
     {
         [Key]
         public Guid AccountId { get; set; }
-        public int FKCenterId { get; set; }
+        public int? FKCenterId { get; set; }
         public VaccineCenter Center { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }

@@ -9,8 +9,9 @@ namespace ModelViews.Entity
  
         public int FKCenterId { get; set; }
         public VaccineCenter Center { get; set; }
-        public int Quantity { get; set; }
+        public string BatchNumber { get; set; }
         public string ActiveStatus { get; set; }
+       
     }
 
 }

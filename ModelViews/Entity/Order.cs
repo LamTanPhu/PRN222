@@ -10,8 +10,8 @@ namespace ModelViews.Entity
      
         public Guid FKProfileId { get; set; }
         public ChildrenProfile Profile { get; set; }
-        public int TotalAmount { get; set; }
-        public int TotalOrderPrice { get; set; }
+        public int TotalAmountPrice { get; set; }
+        public int TotalPaidPrice { get; set; }
         public DateTime PurchaseDate { get; set; }
         public int Status { get; set; }
     }

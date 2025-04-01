@@ -119,11 +119,7 @@
                 .HasForeignKey(vh => vh.FKProfileId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<VaccineHistory>()
-                .HasOne(vh => vh.Account)
-                .WithMany()
-                .HasForeignKey(vh => vh.FKAccountId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
+        
 
             modelBuilder.Entity<VaccineHistory>()
                 .HasOne(vh => vh.Center)

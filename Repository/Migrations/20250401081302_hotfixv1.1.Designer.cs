@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Context;
 
@@ -11,9 +12,11 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401081302_hotfixv1.1")]
+    partial class hotfixv11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FKCenterId")
+                    b.Property<int>("FKCenterId")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")
@@ -74,6 +77,10 @@ namespace Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Allergies")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
@@ -89,10 +96,6 @@ namespace Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ParentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -118,10 +121,10 @@ namespace Repository.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalAmountPrice")
+                    b.Property<int>("TotalAmount")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalPaidPrice")
+                    b.Property<int>("TotalOrderPrice")
                         .HasColumnType("int");
 
                     b.HasKey("OrderId");
@@ -166,7 +169,7 @@ namespace Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ActualDate")
+                    b.Property<DateTime>("ActualDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("AdministeredBy")
@@ -242,6 +245,9 @@ namespace Repository.Migrations
                     b.Property<DateTime>("ProductionDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("QuantityAvailable")
+                        .HasColumnType("int");
+
                     b.Property<int>("UnitOfVolume")
                         .HasColumnType("int");
 
@@ -266,11 +272,10 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BatchNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("FKCenterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("VaccineBatchId");
@@ -333,10 +338,6 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("VacineCenterId");
 
                     b.ToTable("VaccineCenters");
@@ -348,9 +349,8 @@ namespace Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AdministeredBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("AdministeredBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("AdministeredDate")
                         .HasColumnType("datetime2");
@@ -375,6 +375,8 @@ namespace Repository.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("VacineHistoryId");
+
+                    b.HasIndex("AdministeredBy");
 
                     b.HasIndex("FKCenterId");
 
@@ -437,7 +439,9 @@ namespace Repository.Migrations
                 {
                     b.HasOne("ModelViews.Entity.VaccineCenter", "Center")
                         .WithMany()
-                        .HasForeignKey("FKCenterId");
+                        .HasForeignKey("FKCenterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Center");
                 });
@@ -557,6 +561,12 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("ModelViews.Entity.VaccineHistory", b =>
                 {
+                    b.HasOne("ModelViews.Entity.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AdministeredBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ModelViews.Entity.VaccineCenter", "Center")
                         .WithMany()
                         .HasForeignKey("FKCenterId")
@@ -574,6 +584,8 @@ namespace Repository.Migrations
                         .HasForeignKey("FKVaccineId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Account");
 
                     b.Navigation("Center");
 

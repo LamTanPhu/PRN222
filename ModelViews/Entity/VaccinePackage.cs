@@ -9,5 +9,7 @@ namespace ModelViews.Entity
         public string PackageName { get; set; }
         public string PackageDescription { get; set; }
         public int PackageStatus { get; set; }
+
+       
     }
 }
