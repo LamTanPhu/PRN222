@@ -10,10 +10,9 @@ namespace ModelViews.Entity
         public ChildrenProfile Profile { get; set; }
         public int FKCenterId { get; set; }
         public VaccineCenter Center { get; set; }
-        public Guid FKOrderVaccineDetailsId { get; set; }
-        public OrderVaccineDetail OrderVaccineDetail { get; set; }
-        public Guid FKOrderPackageDetailsId { get; set; }
-        public OrderPackageDetail OrderPackageDetail { get; set; }
+        public Guid FKOrderDetailsId { get; set; }
+        public OrderDetail OrderDetail { get; set; }
+     
         public int DoseNumber { get; set; }
         public DateTime AppointmentDate { get; set; }
         public DateTime ActualDate { get; set; }

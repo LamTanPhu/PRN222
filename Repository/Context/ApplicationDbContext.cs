@@ -21,8 +21,7 @@
         public DbSet<Account> Accounts { get; set; }
         public DbSet<ChildrenProfile> ChildrenProfiles { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderVaccineDetail> OrderVaccineDetails { get; set; }
-        public DbSet<OrderPackageDetail> OrderPackageDetails { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; } 
         public DbSet<VaccineHistory> VaccineHistories { get; set; }
         public DbSet<VaccinationSchedule> VaccinationSchedules { get; set; }
 
@@ -89,28 +88,22 @@
 
 
 
-            modelBuilder.Entity<OrderVaccineDetail>()
-                .HasOne(ovd => ovd.Order)
+            modelBuilder.Entity<OrderDetail>()
+                 .HasOne(od => od.Order)
+                 .WithMany()
+                 .HasForeignKey(od => od.FKOrderId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(od => od.Vaccine)
                 .WithMany()
-                .HasForeignKey(ovd => ovd.FKOrderId)
+                .HasForeignKey(od => od.FKVaccineId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<OrderVaccineDetail>()
-                .HasOne(ovd => ovd.Vaccine)
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(od => od.VaccinePackage)
                 .WithMany()
-                .HasForeignKey(ovd => ovd.FKVaccineId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrderVaccineDetail>()
-                .HasOne(ovd => ovd.Order)
-                .WithMany()
-                .HasForeignKey(ovd => ovd.FKOrderId);
-
-
-            modelBuilder.Entity<OrderVaccineDetail>()
-                .HasOne(ovd => ovd.Vaccine)
-                .WithMany()
-                .HasForeignKey(ovd => ovd.FKVaccineId)
+                .HasForeignKey(od => od.FKVaccinePackageId)
                 .OnDelete(DeleteBehavior.Restrict);
 
 
@@ -136,7 +129,7 @@
                 .HasOne(vh => vh.Center)
                 .WithMany()
                 .HasForeignKey(vh => vh.FKCenterId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<VaccinationSchedule>()
                 .HasOne(vs => vs.Profile)
@@ -149,19 +142,14 @@
                 .HasForeignKey(vs => vs.FKCenterId)
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<VaccinationSchedule>()
-                .HasOne(vs => vs.OrderVaccineDetail)
+                .HasOne(vs => vs.OrderDetail)
                 .WithMany()
-                .HasForeignKey(vs => vs.FKOrderVaccineDetailsId)
+                .HasForeignKey(vs => vs.FKOrderDetailsId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<VaccinationSchedule>()
-                .HasOne(vs => vs.OrderPackageDetail)
-                .WithMany()
-                .HasForeignKey(vs => vs.FKOrderPackageDetailsId)
-                .OnDelete(DeleteBehavior.Restrict);
+          
 
         }
-        // Define your DbSets here
-        // public DbSet<YourModel> YourTable { get; set; }
+     
     }
 }

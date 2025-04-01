@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Context;
 
@@ -11,9 +12,11 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401051125_Merged_OrderDetail")]
+    partial class Merged_OrderDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,7 +188,10 @@ namespace Repository.Migrations
                     b.Property<int>("FKCenterId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("FKOrderDetailsId")
+                    b.Property<Guid>("FKOrderPackageDetailsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FKOrderVaccineDetailsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FKProfileId")
@@ -198,7 +204,9 @@ namespace Repository.Migrations
 
                     b.HasIndex("FKCenterId");
 
-                    b.HasIndex("FKOrderDetailsId");
+                    b.HasIndex("FKOrderPackageDetailsId");
+
+                    b.HasIndex("FKOrderVaccineDetailsId");
 
                     b.HasIndex("FKProfileId");
 
@@ -506,9 +514,15 @@ namespace Repository.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ModelViews.Entity.OrderDetail", "OrderPackageDetail")
+                        .WithMany()
+                        .HasForeignKey("FKOrderPackageDetailsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ModelViews.Entity.OrderDetail", "OrderDetail")
                         .WithMany()
-                        .HasForeignKey("FKOrderDetailsId")
+                        .HasForeignKey("FKOrderVaccineDetailsId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -521,6 +535,8 @@ namespace Repository.Migrations
                     b.Navigation("Center");
 
                     b.Navigation("OrderDetail");
+
+                    b.Navigation("OrderPackageDetail");
 
                     b.Navigation("Profile");
                 });

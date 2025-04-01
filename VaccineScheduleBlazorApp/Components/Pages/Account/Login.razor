@@ -1,6 +1,73 @@
 ﻿@page "/Account/Login"
-<h3>Login</h3>
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+
+<div class="container">
+    <h3>Login</h3>
+
+    <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="mt-4">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group mb-3">
+            <label for="username">Username/Email</label>
+            <InputText id="username"
+                       class="form-control"
+                       @bind-Value="loginModel.Username" />
+            <ValidationMessage For="@(() => loginModel.Username)" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="password">Password</label>
+            <InputText id="password"
+                       type="password"
+                       class="form-control"
+                       @bind-Value="loginModel.Password" />
+            <ValidationMessage For="@(() => loginModel.Password)" />
+        </div>
+
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary">Login</button>
+            @if (errorMessage != null)
+            {
+                <span class="text-danger ms-3">@errorMessage</span>
+            }
+        </div>
+    </EditForm>
+</div>
 
 @code {
+    private LoginModel loginModel = new();
+    private string? errorMessage;
 
+    private async Task HandleLogin()
+    {
+        try
+        {
+            var result = await AccountService.Login(loginModel.Username, loginModel.Password);
+            if (result)
+            {
+             
+                NavigationManager.NavigateTo("/Weather");
+            }
+            else
+            {
+                errorMessage = "Invalid username or password";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+    }
+
+    private class LoginModel
+    {
+       
+        public string Username { get; set; } = string.Empty;
+
+      
+       
+        public string Password { get; set; } = string.Empty;
+    }
 }
