@@ -10,6 +10,7 @@ namespace ModelViews.Entity
         public string Location { get; set; }
         public int ContactNumber { get; set; }
         public string Email { get; set; }
+        public string Status { get; set; }
     }
 
 }

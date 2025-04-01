@@ -15,7 +15,7 @@ namespace ModelViews.Entity
      
         public int DoseNumber { get; set; }
         public DateTime AppointmentDate { get; set; }
-        public DateTime ActualDate { get; set; }
+        public DateTime? ActualDate { get; set; }
         public string AdministeredBy { get; set; }
         public int Status { get; set; }
     }

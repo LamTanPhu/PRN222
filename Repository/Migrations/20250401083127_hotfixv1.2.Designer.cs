@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Context;
 
@@ -11,9 +12,11 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401083127_hotfixv1.2")]
+    partial class hotfixv12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -348,9 +351,8 @@ namespace Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AdministeredBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("AdministeredBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("AdministeredDate")
                         .HasColumnType("datetime2");
@@ -375,6 +377,8 @@ namespace Repository.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("VacineHistoryId");
+
+                    b.HasIndex("AdministeredBy");
 
                     b.HasIndex("FKCenterId");
 
@@ -557,6 +561,12 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("ModelViews.Entity.VaccineHistory", b =>
                 {
+                    b.HasOne("ModelViews.Entity.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AdministeredBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ModelViews.Entity.VaccineCenter", "Center")
                         .WithMany()
                         .HasForeignKey("FKCenterId")
@@ -574,6 +584,8 @@ namespace Repository.Migrations
                         .HasForeignKey("FKVaccineId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Account");
 
                     b.Navigation("Center");
 

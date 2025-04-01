@@ -11,7 +11,7 @@ namespace ModelViews.Entity
         public int FKBatchId { get; set; }
         public VaccineBatch Batch { get; set; }
         public string Name { get; set; }
-        public int QuantityAvailable { get; set; }
+      
         public int UnitOfVolume { get; set; }
         public string IngredientsDescription { get; set; }
         public int MinAge { get; set; }
