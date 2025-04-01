@@ -6,8 +6,8 @@ namespace ModelViews.Entity
     {
         [Key]
         public Guid OrderId { get; set; }
-        public Guid FKFeedbackId { get; set; }
-        public Feedback Feedback { get; set; }
+       
+     
         public Guid FKProfileId { get; set; }
         public ChildrenProfile Profile { get; set; }
         public int TotalAmount { get; set; }

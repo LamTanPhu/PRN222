@@ -11,29 +11,26 @@
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        public DbSet<Manufacturer> Manufacturers { get; set; }
+        
         public DbSet<VaccineCenter> VaccineCenters { get; set; }
         public DbSet<VaccineBatch> VaccineBatches { get; set; }
         public DbSet<VaccineCategory> VaccineCategories { get; set; }
         public DbSet<Vaccine> Vaccines { get; set; }
         public DbSet<VaccinePackage> VaccinePackages { get; set; }
         public DbSet<VaccinePackageDetail> VaccinePackageDetails { get; set; }
-        public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<ChildrenProfile> ChildrenProfiles { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Payment> Payments { get; set; }
         public DbSet<OrderVaccineDetail> OrderVaccineDetails { get; set; }
         public DbSet<OrderPackageDetail> OrderPackageDetails { get; set; }
         public DbSet<VaccineHistory> VaccineHistories { get; set; }
         public DbSet<VaccinationSchedule> VaccinationSchedules { get; set; }
-        public DbSet<VaccineReaction> VaccineReactions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) // Only configure if not already configured
+            if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(local);Database=VaccineScheduleSystem;User Id=sa;Password=1234567890;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("Server=(local);Database=VaccineScheduleSystem;User Id=sa;Password=12345;TrustServerCertificate=True;");
             }
         }
 
@@ -45,11 +42,6 @@
                 .WithMany()
                 .HasForeignKey(v => v.FKParentCategoryId);
 
-            modelBuilder.Entity<VaccineBatch>()
-                .HasOne(vb => vb.Manufacturer)
-                .WithMany()
-                .HasForeignKey(vb => vb.FKManufacturerId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<VaccineBatch>()
                 .HasOne(vb => vb.Center)
@@ -88,11 +80,6 @@
                 .WithMany()
                 .HasForeignKey(cp => cp.FKAccountId);
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Feedback)
-                .WithMany()
-                .HasForeignKey(o => o.FKFeedbackId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Profile)
@@ -101,10 +88,6 @@
 
 
 
-            modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Order)
-                .WithMany()
-                .HasForeignKey(p => p.FKOrderId);
 
             modelBuilder.Entity<OrderVaccineDetail>()
                 .HasOne(ovd => ovd.Order)
@@ -176,10 +159,6 @@
                 .WithMany()
                 .HasForeignKey(vs => vs.FKOrderPackageDetailsId)
                 .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<VaccineReaction>()
-                .HasOne(vr => vr.VaccineSchedule)
-                .WithMany()
-                .HasForeignKey(vr => vr.FKVaccineScheduleId);
 
         }
         // Define your DbSets here
