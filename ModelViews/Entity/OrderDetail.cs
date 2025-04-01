@@ -15,7 +15,7 @@ namespace ModelViews.Entity
         public int? FKVaccinePackageId { get; set; }
         public VaccinePackage VaccinePackage { get; set; }
 
-        public int Quantity { get; set; }
+     
         public int TotalPrice { get; set; }
     }
 }
